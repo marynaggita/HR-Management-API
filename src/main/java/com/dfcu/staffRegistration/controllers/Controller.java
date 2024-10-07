@@ -7,10 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.Map;
@@ -26,15 +23,17 @@ public class Controller {
         this.generationService = generationService;
     }
     @PostMapping("/GenerateEmployeeId")
-    public ResponseEntity<String> generateEmployeeCode() {
-        String employeeCode = generationService.generateAndSaveEmployeeCode(10);
+    public ResponseEntity<String> generateEmployeeCode(@RequestHeader("username") String username,
+                                                       @RequestHeader("password") String password) {
+        String employeeCode = generationService.generateAndSaveEmployeeCode(10,username,password);
         return ResponseEntity.ok(employeeCode);
     }
 
     @PostMapping(value ="/EmployeeRequest"  ,consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> registerEmployee(@RequestBody RegistrationRequest registrationRequest) throws IOException {
+    public ResponseEntity<?> registerEmployee(@RequestHeader("username") String username,
+                                              @RequestHeader("password") String password,@RequestBody RegistrationRequest registrationRequest) throws IOException {
         System.out.println("Received RegistrationRequest: " + registrationRequest);
-        return registrationService.registerEmployee(registrationRequest);
+        return registrationService.registerEmployee(registrationRequest,username,password);
     }
 
 }

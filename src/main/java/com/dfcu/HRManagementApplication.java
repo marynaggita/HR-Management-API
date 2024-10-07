@@ -9,8 +9,8 @@ import com.dfcu.configs.Config;
 
 @SpringBootApplication(scanBasePackages = "com.dfcu")
 @Import(Config.class)
-@EnableJpaRepositories("com.dfcu.staffRegistration.repository")
-@EntityScan("com.dfcu.staffRegistration.models") // Specify the entity package
+@EnableJpaRepositories(basePackages = {"com.dfcu.staffRegistration.repository", "com.dfcu.authentication.secretKey","com.dfcu.authentication.user","com.dfcu.admin"})
+@EntityScan(basePackages = "com.dfcu")
 public class HRManagementApplication {
     public static void main(String[] args) {
         SpringApplication.run(HRManagementApplication.class, args);

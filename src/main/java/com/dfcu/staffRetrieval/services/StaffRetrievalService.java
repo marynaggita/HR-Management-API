@@ -1,5 +1,6 @@
 package com.dfcu.staffRetrieval.services;
 
+import com.dfcu.authentication.AuthService;
 import com.dfcu.staffRegistration.models.EmployeeRegistrationRequest;
 import com.dfcu.staffRegistration.repository.StaffRegistrationRepository;
 import com.dfcu.utils.ResponseCode;
@@ -13,13 +14,18 @@ import java.util.List;
 public class StaffRetrievalService {
     @Autowired
     private final StaffRegistrationRepository staffRegistrationRepository;
+    private final AuthService authService;
 
-    public StaffRetrievalService(StaffRegistrationRepository staffRegistrationRepository) {
+    public StaffRetrievalService(StaffRegistrationRepository staffRegistrationRepository, AuthService authService) {
         this.staffRegistrationRepository = staffRegistrationRepository;
+        this.authService = authService;
     }
     // Method to retrieve all employees
     // Method to retrieve employees based on employee number or all employees if no number is provided
-    public ResponseEntity<?> getEmployees(String employeeNumber) {
+    public ResponseEntity<?> getEmployees(String employeeNumber,String username,String password) {
+        if (!authService.authenticate(username, password)) {
+            throw new RuntimeException("Authentication failed: Invalid username or password");
+        }
         List<EmployeeRegistrationRequest> employees;
 
         if (employeeNumber != null && !employeeNumber.isEmpty()) {

@@ -1,5 +1,6 @@
 package com.dfcu.staffRegistration.services;
 
+import com.dfcu.authentication.AuthService;
 import com.dfcu.staffRegistration.models.EmployeeCodeRequest;
 import com.dfcu.staffRegistration.models.EmployeeRegistrationRequest;
 import com.dfcu.staffRegistration.models.RegistrationRequest;
@@ -24,16 +25,21 @@ public class StaffRegistrationService {
     private final EmployeeCodeRepository employeeCodeRepository;
     private final CodeGenerationService codeGenerationService;
     private final ServiceUtils serviceUtils;
+    private final AuthService authService;
 
     @Autowired
-    public StaffRegistrationService(StaffRegistrationRepository staffRegistrationRepository, EmployeeCodeRepository employeeCodeRepository, CodeGenerationService codeGenerationService, ServiceUtils serviceUtils) {
+    public StaffRegistrationService(StaffRegistrationRepository staffRegistrationRepository, EmployeeCodeRepository employeeCodeRepository, CodeGenerationService codeGenerationService, ServiceUtils serviceUtils, AuthService authService) {
         this.staffRegistrationRepository = staffRegistrationRepository;
         this.employeeCodeRepository = employeeCodeRepository;
         this.codeGenerationService = codeGenerationService;
         this.serviceUtils = serviceUtils;
+        this.authService = authService;
     }
 
-    public ResponseEntity<?> registerEmployee(RegistrationRequest registrationRequest) throws IOException {
+    public ResponseEntity<?> registerEmployee(RegistrationRequest registrationRequest,String username,String password) throws IOException {
+        if (!authService.authenticate(username, password)) {
+            throw new RuntimeException("Authentication failed: Invalid username or password");
+        }
         String employeeCode = registrationRequest.getEmployeeCode();
         log.info("RegistrationRequest body: " + registrationRequest);
 
@@ -48,8 +54,8 @@ public class StaffRegistrationService {
             return ResponseCodeMap.response(ResponseCode.BAD_REQUEST, "Employee code has already been used");
         }
 
-        // Generate employee number (retrieve last used employee number logic)
-        String employeeNumber = "DFC" + codeGenerationService.generateAndSaveEmployeeCode2(3);
+        // Generate employee number (generate random last 3 digits)
+        String employeeNumber = "DFCU" + codeGenerationService.generateAndSaveEmployeeNumber(3);
 
         // Create and populate the EmployeeRegistrationRequest object
         EmployeeRegistrationRequest employeeRegistrationRequest = new EmployeeRegistrationRequest();

@@ -1,5 +1,6 @@
 package com.dfcu.staffRegistration.services;
 
+import com.dfcu.authentication.AuthService;
 import com.dfcu.staffRegistration.models.EmployeeCodeRequest;
 import com.dfcu.staffRegistration.repository.EmployeeCodeRepository;
 import com.dfcu.staffRegistration.repository.StaffRegistrationRepository;
@@ -11,13 +12,15 @@ import java.security.SecureRandom;
 @Service
 public class CodeGenerationService {
     private final EmployeeCodeRepository idRepository;
+    private final AuthService authService;
     private static StaffRegistrationRepository staffRegistrationRepository;
     private static final String ALPHANUMERIC = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz";
     private static final String ALPHA = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static final SecureRandom RANDOM = new SecureRandom();
 
-    public CodeGenerationService(EmployeeCodeRepository idRepository, StaffRegistrationRepository staffRegistrationRepository) {
+    public CodeGenerationService(EmployeeCodeRepository idRepository, AuthService authService, StaffRegistrationRepository staffRegistrationRepository) {
         this.idRepository = idRepository;
+        this.authService = authService;
         this.staffRegistrationRepository = staffRegistrationRepository;
     }
 
@@ -37,10 +40,13 @@ public class CodeGenerationService {
         }
         return id.toString();
     }
+// Generate random employeeCode(10 digits)
+    public String generateAndSaveEmployeeCode(int length,String username,String password) {
 
-    public String generateAndSaveEmployeeCode(int length) {
         String generatedCode = generateRandomId(length);
-
+        if (!authService.authenticate(username, password)) {
+            throw new RuntimeException("Authentication failed: Invalid username or password");
+        }
         // Create an instance of EmployeeCodeRequest and set the generated code
         EmployeeCodeRequest employeeCodeRequest = new EmployeeCodeRequest();
         employeeCodeRequest.setEmployeeCode(generatedCode);
@@ -51,8 +57,8 @@ public class CodeGenerationService {
         // Return the generated employee code
         return generatedCode;
     }
-
-    public String generateAndSaveEmployeeCode2(int length) {
+    // Generate random employee Numbe
+    public String generateAndSaveEmployeeNumber(int length) {
         String generatedCode = generateRandomId2(length);
 
         // Create an instance of EmployeeCodeRequest and set the generated code

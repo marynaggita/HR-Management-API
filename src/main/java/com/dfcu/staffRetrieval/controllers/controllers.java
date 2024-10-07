@@ -29,14 +29,16 @@ public class controllers {
 
     // Endpoint to retrieve all employees or filter by surname
     @GetMapping("/employees")
-    public ResponseEntity<?> getEmployees(@RequestParam(required = false) String employeeNumber) {
-        return staffRetrievalService.getEmployees(employeeNumber);
+    public ResponseEntity<?> getEmployees(@RequestHeader("username") String username,
+                                          @RequestHeader("password") String password,@RequestParam(required = false) String employeeNumber) {
+        return staffRetrievalService.getEmployees(employeeNumber,username,password);
     }
 
     @PutMapping("/employees/{employeeNumber}")
-    public ResponseEntity<EmployeeRegistrationRequest> updateEmployee(@PathVariable String employeeNumber,
+    public ResponseEntity<EmployeeRegistrationRequest> updateEmployee(@RequestHeader("username") String username,
+                                                                      @RequestHeader("password") String password,@PathVariable String employeeNumber,
                                                                       @RequestBody EmployeeRegistrationRequest updatedEmployee) {
-        EmployeeRegistrationRequest employee = updateService.updateEmployee(employeeNumber, updatedEmployee.getDateOfBirth(),
+        EmployeeRegistrationRequest employee = updateService.updateEmployee(username,password,employeeNumber, updatedEmployee.getDateOfBirth(),
                 updatedEmployee.getIdPhoto());
         if (employee != null) {
             return ResponseEntity.ok(employee);

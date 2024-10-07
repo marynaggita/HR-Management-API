@@ -13,11 +13,6 @@ import java.util.Optional;
 public interface StaffRegistrationRepository extends JpaRepository<EmployeeRegistrationRequest, String> {
     boolean existsById(String id);
 
-    // Query to fetch the last used employee number
-    @Query("SELECT MAX(e.employeeNumber) FROM EmployeeRegistrationRequest e")
-    static String findLastEmployeeNumber() {
-        return null;
-    }
     List<EmployeeRegistrationRequest> findByEmployeeNumber(String employeeNumber);
 
 }

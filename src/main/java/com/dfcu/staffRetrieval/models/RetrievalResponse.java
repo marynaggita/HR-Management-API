@@ -10,8 +10,9 @@ import lombok.ToString;
 @Setter
 @AllArgsConstructor
 @ToString
-@Entity
+
 public class RetrievalResponse {
+
     private int statusCode;
     private String message;
     private Object data;
