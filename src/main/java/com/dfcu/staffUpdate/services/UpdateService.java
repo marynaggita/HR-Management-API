@@ -19,13 +19,13 @@ public class UpdateService {
     private final StaffCustomRepository staffCustomRepository;
     private final AuthService authService;
 
-    public UpdateService(StaffRegistrationRepository staffRegistrationRepository, StaffCustomRepository staffCustomRepository, AuthService authService) {
+    public UpdateService(StaffCustomRepository staffCustomRepository, AuthService authService) {
         this.staffCustomRepository = staffCustomRepository;
         this.authService = authService;
     }
 
-    public EmployeeRegistrationRequest updateEmployee(String username,String password, String employeeNumber, String dateOfBirth, String idPhoto) {
-        if (!authService.authenticate(username, password)) {
+    public EmployeeRegistrationRequest updateEmployee(String authHeader, String employeeNumber, String dateOfBirth, String idPhoto) {
+        if (!authService.authenticate(authHeader)) {
             throw new RuntimeException("Authentication failed: Invalid username or password");
         }
         EmployeeRegistrationRequest employee = staffCustomRepository.findByEmployeeNumber(employeeNumber);

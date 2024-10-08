@@ -18,6 +18,5 @@ public class EmployeeCodeRequest {
     private String employeeCode;
     private LocalDate dateOfCreation;
 
-    // Flag to indicate if the employee code has been used
     private boolean used;
 }

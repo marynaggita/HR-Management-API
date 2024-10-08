@@ -10,6 +10,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Base64;
+
 @Service
 @Slf4j
 public class AuthService {
@@ -47,19 +49,26 @@ public class AuthService {
     }
 
     // Method to authenticate using username and password
-    public boolean authenticate(String username, String password) {
-        // Fetch the user by username
-        User user = userRepository.findByUsername(username);
-        // Check if user exists and password matches
-        if (user != null && passwordEncoder.matches(password, user.getPassword())) {
-            log.info("Authentication successful for user: " + username);
-            return true; // Authentication successful
+    public boolean authenticate(String authHeader) {
+        if (authHeader != null && authHeader.startsWith("Basic ")) {
+            // Decode the Base64 encoded username:password string
+            String base64Credentials = authHeader.substring(6);
+            String credentials = new String(Base64.getDecoder().decode(base64Credentials));
+            String[] values = credentials.split(":", 2);
+            String username = values[0];
+            String password = values[1];
+
+            User user = userRepository.findByUsername(username);
+            if (user != null && passwordEncoder.matches(password, user.getPassword())) {
+                log.info("Authentication successful for user: " + username);
+                return true;
+            }
+
+            log.warn("User: " + username + "is not allowed perform this operation");
+            return false; // Authentication failed
         }
-
-        log.warn("User: " + username + "is not allowed perform this operation");
-        return false; // Authentication failed
+        return false;
     }
-
     public User registerUser(User registrationRequest) {
         // Check if the username already exists
         if (userRepository.existsByUsername(registrationRequest.getUsername())) {

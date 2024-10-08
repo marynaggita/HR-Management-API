@@ -10,7 +10,7 @@ public interface FailedRequestRepository extends JpaRepository<FailedRequest, Lo
     // Custom query to find recent failed requests
     List<FailedRequest> findTop10ByOrderByCreatedAtDesc();
 
-    // Count failed requests by request type
+    // Count failed requests by action
     long countByAction(String action);
 
     // Additional custom queries can be added as needed
