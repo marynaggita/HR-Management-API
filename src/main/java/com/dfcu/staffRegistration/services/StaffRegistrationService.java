@@ -36,8 +36,8 @@ public class StaffRegistrationService {
         this.authService = authService;
     }
 
-    public ResponseEntity<?> registerEmployee(RegistrationRequest registrationRequest,String username,String password) throws IOException {
-        if (!authService.authenticate(username, password)) {
+    public ResponseEntity<?> registerEmployee(RegistrationRequest registrationRequest,String authHeader) throws IOException {
+        if (!authService.authenticate(authHeader)) {
             throw new RuntimeException("Authentication failed: Invalid username or password");
         }
         String employeeCode = registrationRequest.getEmployeeCode();

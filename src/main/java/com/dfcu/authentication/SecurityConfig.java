@@ -24,10 +24,10 @@ public class SecurityConfig {
 
 @Bean
 public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    http.csrf(AbstractHttpConfigurer::disable) // Disables CSRF protection
+    http.csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(authz -> authz
-                    .requestMatchers("/**").permitAll() // Allow all requests to the /register endpoint
-                    .anyRequest().authenticated() // Require authentication for all other requests
+                    .requestMatchers("/**").permitAll()
+                    .anyRequest().authenticated()
             );
     return http.build();
 }

@@ -17,19 +17,20 @@ import java.util.Date;
 @ToString
 
 public class RegistrationRequest {
-    @JsonProperty("employeeCode")  // Maps JSON property to this field
-    private String employeeCode; // Employee code to check availability
+    @JsonProperty("employeeCode")
+    private String employeeCode;
 
-    @JsonProperty("surname") // Maps JSON property to this field
+    @JsonProperty("surname")
     private String surname;
 
-    @JsonProperty("otherName") // Maps JSON property to this field
+    @JsonProperty("otherName")
     private String otherName;
 
-    @JsonProperty("dateOfBirth") // Maps JSON property to this field
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd") // Ensures correct date format
+    @JsonProperty("dateOfBirth")
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date dateOfBirth;
 
-    @JsonProperty("idPhoto") // Maps JSON property to this field
+    @JsonProperty("idPhoto")
     private String idPhoto;
 }

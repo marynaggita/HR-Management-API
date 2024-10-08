@@ -20,10 +20,8 @@ public class StaffRetrievalService {
         this.staffRegistrationRepository = staffRegistrationRepository;
         this.authService = authService;
     }
-    // Method to retrieve all employees
-    // Method to retrieve employees based on employee number or all employees if no number is provided
-    public ResponseEntity<?> getEmployees(String employeeNumber,String username,String password) {
-        if (!authService.authenticate(username, password)) {
+   public ResponseEntity<?> getEmployees(String employeeNumber,String authHeader) {
+        if (!authService.authenticate(authHeader)) {
             throw new RuntimeException("Authentication failed: Invalid username or password");
         }
         List<EmployeeRegistrationRequest> employees;

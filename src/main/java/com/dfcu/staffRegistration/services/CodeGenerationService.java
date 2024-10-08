@@ -41,10 +41,10 @@ public class CodeGenerationService {
         return id.toString();
     }
 // Generate random employeeCode(10 digits)
-    public String generateAndSaveEmployeeCode(int length,String username,String password) {
+    public String generateAndSaveEmployeeCode(int length,String authHeader) {
 
         String generatedCode = generateRandomId(length);
-        if (!authService.authenticate(username, password)) {
+        if (!authService.authenticate(authHeader)) {
             throw new RuntimeException("Authentication failed: Invalid username or password");
         }
         // Create an instance of EmployeeCodeRequest and set the generated code
@@ -57,7 +57,7 @@ public class CodeGenerationService {
         // Return the generated employee code
         return generatedCode;
     }
-    // Generate random employee Numbe
+    // Generate random employee Number
     public String generateAndSaveEmployeeNumber(int length) {
         String generatedCode = generateRandomId2(length);
 
@@ -72,12 +72,4 @@ public class CodeGenerationService {
         return generatedCode;
     }
 
-
-    // Method to generate the next employee number based on the last used number
-    static synchronized String generateNextEmployeeNumber(int lastUsedEmployeeNumber) {
-        // Increment the last used employee number
-        lastUsedEmployeeNumber++;
-        // Generate the new employee number with leading zeros
-        return "DFCU" + String.format("%03d", lastUsedEmployeeNumber);
-    }
 }

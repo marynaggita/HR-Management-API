@@ -15,7 +15,7 @@ import java.util.Date;
 @Table(name = "tbl_employee_registration")
 public class EmployeeRegistrationRequest {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO) // Ensure you're using this for auto-increment
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Column(nullable = false, unique = true)
